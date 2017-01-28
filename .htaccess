@@ -1,0 +1,7 @@
+DirectoryIndex index.php
+
+RewriteEngine on
+Options +FollowSymlinks
+RewriteBase /
+
+RewriteRule ^([0-9a-zA-Z]+)$ /redirect.php?link=$1 [NE]

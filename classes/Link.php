@@ -1,7 +1,6 @@
 <?php
 
 namespace MyClasses;
-//use MyClasses\db_connection;
 
 class Link
 {
@@ -23,8 +22,6 @@ class Link
         $this->short_link = $this->createShortLink($this->id);
         $this->storeShortLink($mysqli);
 
-        //Закрываем соединение с базой
-        //die(json_encode($send_data));
         //die();
     }
 
@@ -35,7 +32,6 @@ class Link
      */
     public function createShortLink($id){
         $availableValues = '';
-        //$domain = 'http://wlp.icescroll.ru';
         for ($i=0; $i<10; $i++){
             $availableValues .= $i;
         }
@@ -49,7 +45,6 @@ class Link
             $shortLink .= $availableValues[$modulo];
             $id = floor($id/36);
         } while($id!=0);
-        //$fullShortLink = $domain . '/' . $shortLink;
         return $shortLink;
     }
 
@@ -65,6 +60,20 @@ class Link
         $result = $mysqli->query('SELECT MAX(id) from short_link');
         $row = $result->fetch_row();
         $this->id = $row[0];
+    }
+
+    /**
+     * Проверяем была ли получена из базы ссылка, если получена перенаправляем по ссылке
+     * @param $link_url
+     */
+    public static function redirect($link_url){
+        if (isset($link_url)){
+            Header('Status: 301 Moved Permanently');
+            Header('Location: http://'.$link_url);
+        }
+        else{
+            echo "<p>К сожалению, такой ссылки не существует</p>";
+        }
     }
 
     /**
@@ -103,8 +112,26 @@ class Link
         }
     }
 
-    public static function checkShortLink($short_link){
+    /**
+     * Получаем изначальную ссылку по короткой ссылке
+     * @param $received_short_link
+     * @return mixed
+     */
+    public static function getShortLink($received_short_link){
+        $mysqli = db_connection::connect_default();
+        if (!($stmt = $mysqli->prepare("SELECT link_url FROM short_link WHERE short_link = ?"))) {
+            echo "Не удалось подготовить запрос: (" . $mysqli->errno . ") " . $mysqli->error;
+        }
 
-        die();
+        if (!$stmt->bind_param("s", $received_short_link)) {
+            echo "Не удалось привязать параметры: (" . $stmt->errno . ") " . $stmt->error;
+        }
+
+        if (!$stmt->execute()) {
+            echo "Не удалось выполнить запрос: (" . $stmt->errno . ") " . $stmt->error;
+        }
+        $res = $stmt->get_result();
+        $row = $res->fetch_assoc();
+        return $row['link_url'];
     }
 }
