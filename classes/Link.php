@@ -17,12 +17,13 @@ class Link
 
     public function store(){
         $mysqli = db_connection::connect_default();
-        $this->storeNewLink($mysqli);
-        $this->getLastId($mysqli);
-        $this->short_link = $this->createShortLink($this->id);
-        $this->storeShortLink($mysqli);
-
-        //die();
+        //Осуществляем проверку на наличие записи, в целях избежания дублирования информации
+        if (!$this->linkExist($mysqli)){
+            $this->storeNewLink($mysqli);
+            $this->getLastId($mysqli);
+            $this->short_link = $this->createShortLink($this->id);
+            $this->storeShortLink($mysqli);
+        }
     }
 
     /**
@@ -70,9 +71,10 @@ class Link
         if (isset($link_url)){
             Header('Status: 301 Moved Permanently');
             Header('Location: http://'.$link_url);
+            die();
         }
         else{
-            echo "<p>К сожалению, такой ссылки не существует</p>";
+            die("<p>К сожалению, такой ссылки не существует</p>");
         }
     }
 
@@ -133,5 +135,33 @@ class Link
         $res = $stmt->get_result();
         $row = $res->fetch_assoc();
         return $row['link_url'];
+    }
+
+    /**
+     * Проверяем по хешу есть ли уже ссылка в базе данных, если есть, то присваиваем короткую ссылку текущему объекту.
+     * @param $mysqli
+     * @return mixed
+     */
+    public function linkExist($mysqli){
+        if (!($stmt = $mysqli->prepare("SELECT short_link FROM short_link WHERE link_hash = ?"))) {
+            echo "Не удалось подготовить запрос: (" . $mysqli->errno . ") " . $mysqli->error;
+        }
+
+        if (!$stmt->bind_param("s", $this->hash_link)) {
+            echo "Не удалось привязать параметры: (" . $stmt->errno . ") " . $stmt->error;
+        }
+
+        if (!$stmt->execute()) {
+            echo "Не удалось выполнить запрос: (" . $stmt->errno . ") " . $stmt->error;
+        }
+        $res = $stmt->get_result();
+        $row = $res->fetch_assoc();
+        if (isset($row['short_link'])){
+            $this->short_link = $row['short_link'];
+            return true;
+        }
+        else {
+            return false;
+        }
     }
 }

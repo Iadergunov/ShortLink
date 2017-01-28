@@ -16,7 +16,7 @@ $link->store();
     <div class="panel panel-default">
         <?php
         $test = $_GET['link'];
-        echo "<p>Ваша ссылка: <a href='http://wlp.icescroll.ru/$link->short_link'>wlp.icescroll.ru/$link->short_link</a></p>"
+        die("<p>Ваша ссылка: <a href='http://wlp.icescroll.ru/$link->short_link'>wlp.icescroll.ru/$link->short_link</a></p>");
         ?>
     </div>
 </div>
