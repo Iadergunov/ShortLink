@@ -2,7 +2,9 @@
 $loader = require_once __DIR__.'/vendor/autoload.php';
 use MyClasses\Link;
 $received_link = $_POST['link'];
-$link = new Link($received_link);
+//Убираем возможные http и https префиксы
+$formatted_link = Link::formatLink($received_link);
+$link = new Link($formatted_link);
 $link->store();
 ?>
 

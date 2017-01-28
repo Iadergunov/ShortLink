@@ -74,7 +74,7 @@ class Link
             die();
         }
         else{
-            die("<p>К сожалению, такой ссылки не существует</p>");
+            die("<p>К сожалению, такой ссылки не существует. <a href='http://wlp.icescroll.ru    '>Создать новую ссылку</a></p>");
         }
     }
 
@@ -163,5 +163,18 @@ class Link
         else {
             return false;
         }
+    }
+
+    /**
+     * Убирает префиксы http и https если они присутствуют в ссылке
+     * @param $link
+     * @return mixed
+     */
+    public static function formatLink($link){
+        $pattern1 = "http://";
+        $pattern2 = "https://";
+        $link = str_replace($pattern1, "", $link);
+        $link = str_replace($pattern2, "", $link);
+        return $link;
     }
 }

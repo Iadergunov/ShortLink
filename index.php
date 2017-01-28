@@ -19,7 +19,7 @@ db_connection::connect_default();
                 <form method="POST" action="http://wlp.icescroll.ru/store.php" accept-charset="UTF-8">
                     <div class="form-group">
                         <label for="link">Пожалуйста, введите Вашу ссылку:</label>
-                        <input class="form-control" name="link" type="text" id="link">
+                        <input class="form-control" name="link" type="text" id="link" required>
                     </div>
                     <div class="form-group">
                         <input class="btn btn-primary form-control" type="submit" value="Получить короткую ссылку">
