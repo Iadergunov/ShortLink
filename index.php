@@ -1,9 +1,4 @@
 <?php
-/**function __autoload( $className ) {
-    $className = str_replace( "..", "", $className );
-    require_once( "classes/$className.php" );
-    echo "Loaded classes/$className.php<br>";
-}*/
 $loader = require_once __DIR__.'/vendor/autoload.php';
 use MyClasses\db_connection;
 db_connection::connect_default();

@@ -9,12 +9,19 @@ class Link
     public $short_link;
     public $id;
 
+    /**
+     * Link constructor.
+     * @param $link_url
+     */
     public function __construct($link_url)
     {
         $this->link_url = $link_url;
         $this->hash_link =  md5($link_url);
     }
 
+    /**
+     * Проверяем на существование ссылки. Если ссылки нет, то сохраняем новую ссылку в базе
+     */
     public function store(){
         $mysqli = db_connection::connect_default();
         //Осуществляем проверку на наличие записи, в целях избежания дублирования информации
@@ -47,10 +54,6 @@ class Link
             $id = floor($id/36);
         } while($id!=0);
         return $shortLink;
-    }
-
-    public function setLinkId(){
-
     }
 
     /**
