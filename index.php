@@ -15,7 +15,7 @@ db_connection::connect_default();
     </head>
     <body>
         <div class="container">
-            <form method="POST" action="http://wlp.icescroll.ru/" accept-charset="UTF-8">
+            <form method="POST" action="http://wlp.icescroll.ru/store.php" accept-charset="UTF-8">
                     <div class="form-group">
                         <label for="link">Пожалуйста, введите Вашу ссылку:</label>
                         <input class="form-control" name="link" type="text" id="link">
